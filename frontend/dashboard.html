@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>LÖSEV İnci - Kontrol Paneli</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        losev: {
+                            red: '#d62828',
+                            redSoft: '#fcd5ce',
+                            redDark: '#9e0000',
+                            green: '#2e7d32',
+                            greenSoft: '#e8f5e9',
+                            orange: '#f77f00',
+                            orangeSoft: '#ffecd1',
+                            blue: '#457b9d',
+                            blueSoft: '#e0fbfc'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+                        'glass-hover': '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                    }
+                },
+            },
+        };
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        .form-input {
+            @apply w-full rounded-xl border border-slate-200 bg-white/70 px-4 py-3 text-sm text-slate-800 outline-none transition-all duration-300 placeholder:text-slate-400 opacity-90;
+        }
+
+        .form-input:focus,
+        .form-input:not(:placeholder-shown) {
+            @apply opacity-100 bg-white border-losev-red ring-2 ring-losev-red/20 shadow-sm transform scale-[1.01];
+        }
+
+        .input-group {
+            @apply mb-4;
+        }
+
+        .input-group label {
+            @apply flex items-center gap-1 block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider transition-colors;
+        }
+
+        .form-input:focus+label {
+            @apply text-losev-red;
+        }
+
+        .required-star {
+            @apply text-losev-red text-sm font-black;
+        }
+
+        .status-badge {
+            @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider;
+        }
+
+        .status-pending {
+            @apply bg-losev-orangeSoft text-losev-orange border border-losev-orange/20;
+        }
+
+        .status-approved {
+            @apply bg-losev-greenSoft text-losev-green border border-losev-green/20;
+        }
+
+        .status-rejected {
+            @apply bg-losev-redSoft text-losev-red border border-losev-red/20;
+        }
+
+        .btn-primary {
+            @apply inline-flex items-center justify-center gap-2 rounded-full w-full bg-gradient-to-r from-losev-red to-[#f94144] px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-losev-red/30 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-losev-red/40 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+        }
+
+        .btn-secondary {
+            @apply inline-flex items-center justify-center gap-2 rounded-full w-full bg-slate-100 px-6 py-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-slate-200 transition-all hover:bg-slate-200 hover:shadow-md active:scale-95;
+        }
+
+        /* Hide element globally */
+        .hidden-panel {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden relative min-h-screen flex flex-col">
+
+    <!-- Security Check (prevent flicker if not logged in) -->
+    <script>
+        const userJson = localStorage.getItem('auth_user');
+        if (!userJson) {
+            window.location.href = 'login.html';
+        }
+        const user = JSON.parse(userJson);
+    </script>
+
+    <!-- Animated Background Blobs -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div
+            class="absolute top-0 -left-4 w-72 h-72 bg-losev-redSoft rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob">
+        </div>
+        <div
+            class="absolute -bottom-8 right-20 w-72 h-72 bg-losev-greenSoft rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-2000">
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 w-full glass-card border-b border-white/40">
+        <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
+            <div class="flex items-center gap-4 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <div
+                    class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-losev-red to-rose-600 shadow-md transform transition hover:rotate-6">
+                    <svg viewBox="0 0 32 32" class="h-7 w-7 text-white" fill="none">
+                        <path
+                            d="M16 27s-6.4-3.9-9.7-7.9C4.1 16.7 3.5 14.2 4 12.2 4.6 9.7 6.7 8 9 8c1.9 0 3.4 1 4.3 2.5C14.6 9 16.1 8 18 8c2.3 0 4.4 1.7 5 4.2.5 2-0.1 4.5-2.3 6.9C22.4 23.1 16 27 16 27z"
+                            fill="currentColor" />
+                        <path d="M12 16l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-[0.7rem] font-black tracking-[0.2em] text-losev-red uppercase">LÖSEV İNCİ</h1>
+                    <p class="text-lg font-bold text-slate-800 leading-none">Kontrol Paneli</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex flex-col items-end">
+                    <span id="headerUserName" class="text-sm font-bold text-slate-700">Kullanıcı</span>
+                    <span id="headerUserRole"
+                        class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Rol</span>
+                </div>
+                <button onclick="logout()"
+                    class="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
+                    title="Çıkış Yap">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-12 px-4 py-10 lg:px-6">
+
+        <!-- STUDENT SECTION -->
+        <section id="studentSection" class="hidden-panel animate-fade-in">
+            <div class="mb-8 border-l-4 border-losev-red pl-4">
+                <h2 class="text-3xl font-black text-slate-800">Öğrenci İstasyonu</h2>
+                <p class="text-slate-500 font-medium mt-1">Hoş geldin <span id="studentWelcomeName"
+                        class="font-bold"></span>! Etkinliklerini ekle ve saatlerini katla.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-[1fr,1.2fr] gap-8 items-start">
+
+                <!-- Activity Form -->
+                <div class="glass-card p-6 md:p-8 rounded-[2rem] relative bg-white/95">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-losev-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Yeni Etkinlik Ekle
+                    </h3>
+
+                    <form id="activityForm" onsubmit="event.preventDefault(); addActivity();">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="input-group">
+                                <label>Tarih <span class="required-star">*</span></label>
+                                <input type="date" id="activityDate" required class="form-input" />
+                            </div>
+                            <div class="input-group">
+                                <label>Süre (Saat) <span class="required-star">*</span></label>
+                                <input type="number" step="0.5" min="0.5" id="activityHours" required class="form-input"
+                                    placeholder="Örn: 2" />
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Etkinlik Türü <span class="required-star">*</span></label>
+                            <select id="activityType"
+                                class="form-input appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_1rem_center] bg-no-repeat pr-10">
+                                <option value="Seminer">Seminer</option>
+                                <option value="Stant">Stant / Tanıtım</option>
+                                <option value="Bağış">Bağış Toplama</option>
+                                <option value="Kermes">Kermes Organizasyonu</option>
+                                <option value="Kamuoyu bilinçlendirme">Kamuoyu Bilinçlendirme</option>
+                                <option value="Sosyal medya çalışması">Sosyal Medya Çalışması</option>
+                                <option value="Farkındalık etkinliği">Farkındalık Etkinliği</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Neler Yaptın? (Açıklama) <span class="required-star">*</span></label>
+                            <textarea id="activityDescription" rows="3" required class="form-input resize-none"
+                                placeholder="Bugün standımızda insanlara lösemi hakkında bilgiler verdim..."></textarea>
+                        </div>
+
+                        <button type="submit" id="addActivityBtn" class="btn-primary mt-4">Etkinliği Gönder</button>
+                    </form>
+                </div>
+
+                <!-- Badges & Summary -->
+                <div class="glass-card p-6 rounded-[2rem] bg-white border-b-4 border-b-losev-orange">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-slate-800">Başarı Tabağın</h3>
+                        <span
+                            class="bg-slate-100 text-slate-500 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Canlı
+                            Durum</span>
+                    </div>
+
+                    <div id="summaryBox"
+                        class="flex flex-col items-center justify-center p-6 text-center text-slate-500 font-medium min-h-[200px]">
+                        <div class="w-10 h-10 border-4 border-slate-200 border-t-losev-red rounded-full animate-spin">
+                        </div>
+                        <p class="mt-4">Veriler yükleniyor...</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Recent Activities List (Student) -->
+            <div class="mt-8 glass-card rounded-[2rem] p-6 md:p-8 bg-white/90">
+                <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    🕒 Gönüllülük Geçmişim
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead>
+                            <tr class="border-b-2 border-slate-100 text-xs uppercase tracking-wider text-slate-500">
+                                <th class="pb-3 px-4 font-bold">Tarih</th>
+                                <th class="pb-3 px-4 font-bold">Tür</th>
+                                <th class="pb-3 px-4 font-bold">Açıklama</th>
+                                <th class="pb-3 px-4 font-bold text-center">Süre</th>
+                                <th class="pb-3 px-4 font-bold text-center">Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentActivitiesTbody" class="divide-y divide-slate-100/60">
+                            <tr>
+                                <td colspan="5" class="py-10 text-center text-sm font-medium text-slate-400">
+                                    Veriler yükleniyor...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- TEACHER SECTION -->
+        <section id="teacherSection" class="hidden-panel pt-4 animate-fade-in">
+            <div class="mb-8 border-l-4 border-losev-blue pl-4">
+                <h2 class="text-3xl font-black text-slate-800">Öğretmen Paneli</h2>
+                <p class="text-slate-500 font-medium mt-1">Öğrencilerinin başarılarını onayla ve onları motive et.</p>
+            </div>
+
+            <div class="glass-card rounded-[2rem] bg-white p-6 md:p-8">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-12 h-12 bg-losev-blueSoft rounded-2xl flex items-center justify-center text-losev-blue">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold">Bekleyen Onaylar</h3>
+                            <p class="text-xs font-medium text-slate-500">Okulunuza ait bekleyen etkinlikler</p>
+                        </div>
+                    </div>
+                    <button onclick="loadPendingActivities()" class="btn-secondary !w-auto text-xs !px-4 !py-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                            </path>
+                        </svg>
+                        Listeyi Yenile
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-100">
+                    <table class="w-full text-left border-collapse min-w-[800px]">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr class="text-xs uppercase tracking-wider text-slate-500">
+                                <th class="py-4 px-5 font-bold">Öğrenci</th>
+                                <th class="py-4 px-5 font-bold">Okul</th>
+                                <th class="py-4 px-5 font-bold">Etkinlik Türü</th>
+                                <th class="py-4 px-5 font-bold text-center">Süre</th>
+                                <th class="py-4 px-5 font-bold">Tarih</th>
+                                <th class="py-4 px-5 font-bold text-right">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingTbody" class="divide-y divide-slate-100">
+                            <tr>
+                                <td colspan="6" class="py-8 text-center text-sm font-medium text-slate-400">
+                                    Kayıtlar aranıyor...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- REPORTS SECTION (Visible To Both Roles) -->
+        <section id="reportsSection" class="pt-8 border-t border-slate-200/60 animate-fade-in hidden-panel">
+            <div class="mb-8 border-l-4 border-losev-green pl-4">
+                <h2 class="text-3xl font-black text-slate-800">Genel Merkez Raporları</h2>
+                <p class="text-slate-500 font-medium mt-1">Gönüllülük hareketimizin rakamlara yansıyan umut verici
+                    tablosu.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-6">
+                <!-- Top Students -->
+                <div class="glass-card bg-white p-6 rounded-[2rem]">
+                    <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                        ⭐ Lider İnciler (Top 10 Öğrenci)
+                    </h3>
+                    <div class="space-y-3" id="topStudentsContainer">
+                        <p class="text-sm text-slate-400 text-center py-4">Veriler yükleniyor...</p>
+                    </div>
+                </div>
+
+                <!-- Top Schools -->
+                <div class="glass-card bg-white p-6 rounded-[2rem]">
+                    <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                        🏫 İnci Okullar (Top 10 Okul)
+                    </h3>
+                    <div class="space-y-3" id="topSchoolsContainer">
+                        <p class="text-sm text-slate-400 text-center py-4">Veriler yükleniyor...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const API_BASE = 'http://localhost:4000/api';
+
+        // Setup UI Based on User Role
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('headerUserName').innerText = `${user.firstName} ${user.lastName}`;
+
+            const stSection = document.getElementById('studentSection');
+            const tcSection = document.getElementById('teacherSection');
+            const rpSection = document.getElementById('reportsSection');
+
+            if (user.role === 'student') {
+                document.getElementById('headerUserRole').innerText = 'Öğrenci İncisi';
+                document.getElementById('studentWelcomeName').innerText = user.firstName;
+                stSection.classList.remove('hidden-panel');
+                rpSection.classList.remove('hidden-panel');
+                fetchStudentDashboard();
+            } else if (user.role === 'teacher') {
+                document.getElementById('headerUserRole').innerText = 'Koordinatör Öğretmen';
+                tcSection.classList.remove('hidden-panel');
+                rpSection.classList.remove('hidden-panel');
+                loadPendingActivities();
+            }
+
+            // Both roles see reports
+            loadReports();
+        });
+
+        function logout() {
+            localStorage.removeItem('auth_user');
+            window.location.href = 'index.html';
+        }
+
+        // Toast Notification
+        function showToast(msg, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-2xl shadow-xl font-bold text-sm transform transition-all translate-y-20 opacity-0 z-50 ${type === 'error' ? 'bg-losev-red text-white' : 'bg-losev-green text-white'}`;
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+
+            requestAnimationFrame(() => toast.classList.remove('translate-y-20', 'opacity-0'));
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        async function apiRequest(endpoint, method = 'GET', body = null) {
+            try {
+                const opts = { method, headers: {} };
+                if (body) {
+                    opts.headers['Content-Type'] = 'application/json';
+                    opts.body = JSON.stringify(body);
+                }
+                const res = await fetch(API_BASE + endpoint, opts);
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'Bilinmeyen bir hata oluştu');
+                return data;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        // STUDENT APIS
+        async function addActivity() {
+            const btn = document.getElementById('addActivityBtn');
+            btn.disabled = true;
+
+            const payload = {
+                date: document.getElementById('activityDate').value,
+                type: document.getElementById('activityType').value,
+                hours: document.getElementById('activityHours').value,
+                description: document.getElementById('activityDescription').value.trim(),
+            };
+
+            try {
+                await apiRequest(`/students/${user.id}/activities`, 'POST', payload);
+                showToast('Etkinlik eklendi! Öğretmen onayı bekleniyor.');
+                document.getElementById('activityForm').reset();
+                await fetchStudentDashboard();
+            } catch (e) {
+                showToast(e.message, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        async function fetchStudentDashboard() {
+            try {
+                const [studentData, activitiesData] = await Promise.all([
+                    apiRequest(`/students/${user.id}`),
+                    apiRequest(`/students/${user.id}/activities`)
+                ]);
+
+                // Render Summary
+                const { summary, badge } = studentData;
+                const sumBox = document.getElementById('summaryBox');
+
+                let badgeColorClass = 'from-slate-200 to-slate-300 text-slate-800';
+                if (badge.code === 'bronz') badgeColorClass = 'from-amber-600 to-yellow-500 text-white shadow-amber-500/50';
+                else if (badge.code === 'gumus') badgeColorClass = 'from-slate-300 to-slate-400 text-slate-800';
+                else if (badge.code === 'altin') badgeColorClass = 'from-yellow-400 to-yellow-600 text-white shadow-yellow-500/50';
+                else if (badge.code === 'platin') badgeColorClass = 'from-cyan-400 to-blue-500 text-white shadow-cyan-500/50';
+
+                sumBox.innerHTML = `
+          <div class="grid grid-cols-2 gap-4 w-full mb-6">
+            <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex flex-col justify-center text-center">
+              <span class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Toplam Puan/Saat</span>
+              <span class="text-3xl font-black text-losev-red">${summary.total}</span>
+            </div>
+            <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex flex-col justify-center text-center">
+              <span class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Yıllık Toplam</span>
+              <span class="text-3xl font-black text-losev-blue">${summary.yearly}</span>
+            </div>
+          </div>
+          <div class="w-full text-center">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Güncel Rozet</span>
+            <div class="inline-flex px-6 py-3 rounded-full bg-gradient-to-r shadow-lg font-bold text-sm uppercase tracking-wide ${badgeColorClass}">
+              ${badge.label}
+            </div>
+          </div>
+        `;
+
+                // Render Activity Table
+                const tbody = document.getElementById('studentActivitiesTbody');
+                if (activitiesData.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-sm font-medium text-slate-400">Henüz kayıtlı bir etkinliğin yok.</td></tr>`;
+                } else {
+                    // Sor by newest first
+                    activitiesData.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    tbody.innerHTML = activitiesData.map(a => {
+                        const statusLabel = a.status === 'approved' ? 'Onaylandı' : a.status === 'rejected' ? 'Reddedildi' : 'Bekliyor';
+                        const statusClass = `status-${a.status}`;
+                        return `
+              <tr class="group hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0">
+                <td class="py-4 px-4 text-sm font-semibold text-slate-700">${new Date(a.date).toLocaleDateString('tr-TR')}</td>
+                <td class="py-4 px-4 text-sm text-slate-600 font-medium">${a.type}</td>
+                <td class="py-4 px-4 text-sm text-slate-500" title="${a.description}">${a.description || '-'}</td>
+                <td class="py-4 px-4 text-sm font-black text-losev-blue text-center">${a.hours} sa</td>
+                <td class="py-4 px-4 text-center"><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+              </tr>
+            `;
+                    }).join('');
+                }
+            } catch (e) {
+                showToast(e.message, 'error');
+            }
+        }
+
+        // TEACHER APIS
+        async function loadPendingActivities() {
+            try {
+                // Teacher theoretically only sees their school, filtering is done here or on backend
+                // Since backend route is public, we filter dynamically in JS for simplicity:
+                const allPending = await apiRequest('/activities/pending');
+                const list = allPending.filter(a => a.schoolName === user.schoolName);
+
+                const tbody = document.getElementById('pendingTbody');
+
+                if (list.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-sm font-medium text-slate-400">Okulunuza ait bekleyen kayıt bulunmuyor. Harika!</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = list.map(a => `
+          <tr class="hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0">
+            <td class="py-4 px-5">
+              <p class="font-bold text-sm text-slate-800">${a.studentName || 'Bilinmiyor'}</p>
+            </td>
+            <td class="py-4 px-5 text-sm text-slate-600 font-medium">${a.schoolName || '-'}</td>
+            <td class="py-4 px-5">
+              <span class="inline-flex bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">${a.type}</span>
+            </td>
+            <td class="py-4 px-5 text-sm font-black text-losev-orange text-center">${a.hours}</td>
+            <td class="py-4 px-5 text-sm text-slate-500 font-medium">${new Date(a.date).toLocaleDateString('tr-TR')}</td>
+            <td class="py-4 px-5 text-right flex justify-end gap-2">
+              <button onclick="updateActivity('${a.id}', 'approved')" class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition shadow-sm" title="Onayla">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+              </button>
+              <button onclick="updateActivity('${a.id}', 'rejected')" class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center hover:bg-rose-500 hover:text-white transition shadow-sm" title="Reddet">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+            } catch (e) {
+                showToast(e.message, 'error');
+            }
+        }
+
+        async function updateActivity(id, status) {
+            if (!confirm(status === 'approved' ? 'Bu etkinliği onaylıyor musunuz?' : 'Bu etkinliği reddetmek istediğinize emin misiniz?')) return;
+
+            try {
+                await apiRequest(`/activities/${id}/status`, 'PATCH', { status });
+                showToast(status === 'approved' ? 'Etkinlik ONAYLANDI!' : 'Etkinlik REDDEDİLDİ!', status === 'approved' ? 'success' : 'error');
+                await loadPendingActivities();
+                loadReports();
+            } catch (e) {
+                showToast(e.message, 'error');
+            }
+        }
+
+        // REPORTS
+        async function loadReports() {
+            try {
+                const [students, schools] = await Promise.all([
+                    apiRequest('/reports/top-students'),
+                    apiRequest('/reports/top-schools')
+                ]);
+
+                const formatRow = (index, name, detail, val) => `
+          <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition border border-slate-100">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center font-black text-slate-400 text-sm">
+                ${index === 0 ? '🏆' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
+              </div>
+              <div class="flex flex-col">
+                <span class="font-bold text-sm text-slate-800">${name}</span>
+                <span class="text-[0.65rem] uppercase font-bold text-slate-400">${detail}</span>
+              </div>
+            </div>
+            <div class="font-black text-losev-blue bg-losev-blueSoft px-3 py-1 rounded-lg">
+              ${val}<span class="text-xs font-semibold ml-1 text-slate-500">sa</span>
+            </div>
+          </div>
+        `;
+
+                const stContainer = document.getElementById('topStudentsContainer');
+                if (students.length === 0) {
+                    stContainer.innerHTML = '<p class="text-sm text-slate-400 text-center py-4">Henüz onaylı etkinlik yok</p>';
+                } else {
+                    stContainer.innerHTML = students.map((s, i) => formatRow(i, s.name, s.schoolName || 'Bilinmiyor', s.totalHours)).join('');
+                }
+
+                const scContainer = document.getElementById('topSchoolsContainer');
+                if (schools.length === 0) {
+                    scContainer.innerHTML = '<p class="text-sm text-slate-400 text-center py-4">Henüz onaylı etkinlik yok</p>';
+                } else {
+                    scContainer.innerHTML = schools.map((s, i) => formatRow(i, s.schoolName || 'Bilinmeyen Okul', `${s.studentCount} Etkin Öğrenci`, s.totalHours)).join('');
+                }
+            } catch (e) {
+                document.getElementById('topStudentsContainer').innerHTML = '<p class="text-sm text-losev-red text-center py-4">Raporlar yüklenemedi</p>';
+            }
+        }
+    </script>
+</body>
+
+</html>
