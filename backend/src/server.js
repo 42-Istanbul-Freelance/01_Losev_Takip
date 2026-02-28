@@ -1,11 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-const apiRouter = require('./routes');
+const config = require('./config');
+const apiRouter = require('./routes/router');
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = config.port;
 
-app.use(cors());
+app.use(cors({ origin: config.corsOrigin }));
 app.use(express.json());
 
 app.get('/api/health', (req, res) => {
