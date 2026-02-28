@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>LÖSEV İnci - Giriş ve Kayıt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        losev: {
+                            red: '#d62828',
+                            redSoft: '#fcd5ce',
+                            redDark: '#9e0000',
+                            green: '#2e7d32',
+                            greenSoft: '#e8f5e9',
+                            orange: '#f77f00',
+                            orangeSoft: '#ffecd1',
+                            blue: '#457b9d',
+                            blueSoft: '#e0fbfc'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                },
+            },
+        };
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        /* UX Improvements */
+        /* Make inputs transparent/opaque until focused or filled */
+        .form-input {
+            @apply w-full rounded-xl border border-slate-200 bg-black/5 px-4 py-3 text-sm text-slate-800 outline-none transition-all duration-300 placeholder:text-slate-400 opacity-90;
+        }
+
+        .form-input:focus,
+        .form-input:not(:placeholder-shown) {
+            @apply opacity-100 bg-white border-losev-red ring-2 ring-losev-red/20 shadow-sm transform scale-[1.01];
+        }
+
+        .input-group label {
+            @apply flex items-center gap-1 block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider transition-colors;
+        }
+
+        .form-input:focus+label {
+            @apply text-losev-red;
+        }
+
+        .required-star {
+            @apply text-losev-red text-sm font-black;
+        }
+
+        .btn-primary {
+            @apply inline-flex items-center justify-center gap-2 rounded-full w-full bg-gradient-to-r from-losev-red to-[#f94144] px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-losev-red/30 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-losev-red/40 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+        }
+
+        .tab-active {
+            @apply bg-losev-red text-white shadow-md shadow-losev-red/30;
+        }
+
+        .tab-inactive {
+            @apply bg-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-100;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-50 text-slate-800 antialiased relative min-h-screen flex flex-col justify-center items-center py-12 px-4">
+
+    <!-- Animations bg -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div
+            class="absolute top-0 -left-4 w-72 h-72 bg-losev-redSoft rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob">
+        </div>
+        <div
+            class="absolute -bottom-8 right-20 w-72 h-72 bg-losev-orangeSoft rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-2000">
+        </div>
+    </div>
+
+    <div class="w-full max-w-md animate-fade-in relative z-10">
+
+        <!-- Header/Logo area -->
+        <div class="text-center mb-8">
+            <div class="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-losev-red to-rose-600 shadow-lg transform transition hover:rotate-6 mb-4 cursor-pointer"
+                onclick="window.location.href='index.html'">
+                <svg viewBox="0 0 32 32" class="h-10 w-10 text-white" fill="none">
+                    <path
+                        d="M16 27s-6.4-3.9-9.7-7.9C4.1 16.7 3.5 14.2 4 12.2 4.6 9.7 6.7 8 9 8c1.9 0 3.4 1 4.3 2.5C14.6 9 16.1 8 18 8c2.3 0 4.4 1.7 5 4.2.5 2-0.1 4.5-2.3 6.9C22.4 23.1 16 27 16 27z"
+                        fill="currentColor" />
+                    <path d="M12 16l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </div>
+            <h1 class="text-3xl font-black tracking-tight text-slate-800">Hoş Geldiniz</h1>
+            <p class="text-slate-500 font-medium mt-1">LÖSEV İnci Gönüllülük İstasyonu</p>
+        </div>
+
+        <!-- Main Card -->
+        <div class="glass-card rounded-[2rem] p-6 md:p-8 relative">
+
+            <!-- Role Tabs -->
+            <div class="flex p-1 bg-slate-100 rounded-full mb-8 relative">
+                <button id="tabStudent" onclick="switchRole('student')"
+                    class="flex-1 py-2.5 rounded-full text-sm font-bold transition-all tab-active">Öğrenci</button>
+                <button id="tabTeacher" onclick="switchRole('teacher')"
+                    class="flex-1 py-2.5 rounded-full text-sm font-bold transition-all tab-inactive">Öğretmen</button>
+            </div>
+
+            <!-- Mode Switch (Login / Register) -->
+            <div class="flex justify-center gap-6 border-b border-slate-200 mb-6">
+                <button id="modeLoginBtn" onclick="switchMode('login')"
+                    class="pb-3 text-sm font-bold border-b-2 border-losev-red text-losev-red transition-all">Giriş
+                    Yap</button>
+                <button id="modeRegisterBtn" onclick="switchMode('register')"
+                    class="pb-3 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition-all">Kayıt
+                    Ol</button>
+            </div>
+
+            <!-- FORMS -->
+            <div id="formContainer" class="relative">
+
+                <!-- Error Message Container -->
+                <div id="errorMessage"
+                    class="hidden rounded-xl bg-losev-redSoft/50 border border-losev-red/20 text-losev-redDark text-sm font-semibold p-3 mb-4 text-center">
+                </div>
+
+                <!-- LOGIN FORM -->
+                <form id="loginForm" class="space-y-4" onsubmit="handleLogin(event)">
+                    <div class="input-group">
+                        <label>E-posta <span class="required-star">*</span></label>
+                        <input id="loginEmail" type="email" required class="form-input"
+                            placeholder="Mail adresini gir" />
+                    </div>
+                    <div class="input-group">
+                        <label>Şifre <span class="required-star">*</span></label>
+                        <input id="loginPassword" type="password" required class="form-input"
+                            placeholder="Şifrenizi gir" />
+                    </div>
+                    <button type="submit" id="loginSubmitBtn" class="btn-primary mt-6">Giriş Yap</button>
+                </form>
+
+                <!-- REGISTER FORM -->
+                <form id="registerForm" class="space-y-4 hidden" onsubmit="handleRegister(event)">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="input-group">
+                            <label>Ad <span class="required-star">*</span></label>
+                            <input id="regFirstName" required class="form-input" placeholder="Örn. Deniz" />
+                        </div>
+                        <div class="input-group">
+                            <label>Soyad <span class="required-star">*</span></label>
+                            <input id="regLastName" required class="form-input" placeholder="Örn. Yılmaz" />
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>E-posta <span class="required-star">*</span></label>
+                        <input id="regEmail" type="email" required class="form-input" placeholder="ornek@mail.com" />
+                    </div>
+
+                    <div class="input-group">
+                        <label>Şifre <span class="required-star">*</span></label>
+                        <input id="regPassword" type="password" required class="form-input"
+                            placeholder="Güçlü bir şifre seçin" />
+                    </div>
+
+                    <!-- Student specific fields -->
+                    <div id="studentFields" class="space-y-4">
+                        <div class="input-group">
+                            <label>Okul Adı <span class="required-star">*</span></label>
+                            <input id="regSchoolName" class="form-input" placeholder="Anadolu Lisesi" />
+                        </div>
+                        <div class="input-group">
+                            <label>Koordinatör Öğretmen <span class="required-star">*</span></label>
+                            <input id="regTeacher" class="form-input" placeholder="Öğretmen Adı" />
+                        </div>
+                    </div>
+
+                    <!-- Teacher specific fields (if any extra, for now just school) -->
+                    <div id="teacherFields" class="space-y-4 hidden">
+                        <div class="input-group">
+                            <label>Okul Adı <span class="required-star">*</span></label>
+                            <input id="regTeacherSchoolName" class="form-input" placeholder="Anadolu Lisesi" />
+                        </div>
+                    </div>
+
+                    <button type="submit" id="registerSubmitBtn" class="btn-primary mt-6">Aramıza Katıl</button>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:4000/api';
+        let currentRole = 'student'; // 'student' or 'teacher'
+        let currentMode = 'login';   // 'login' or 'register'
+
+        // Initialization logic checking URL params if user clicked from Landing Page
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            if (tabParam === 'teacher') {
+                switchRole('teacher');
+            }
+        });
+
+        function showError(msg) {
+            const err = document.getElementById('errorMessage');
+            if (!msg) {
+                err.classList.add('hidden');
+                err.innerText = '';
+            } else {
+                err.classList.remove('hidden');
+                err.innerText = msg;
+            }
+        }
+
+        function switchRole(role) {
+            currentRole = role;
+            document.getElementById('tabStudent').className = `flex-1 py-2.5 rounded-full text-sm font-bold transition-all ${role === 'student' ? 'tab-active' : 'tab-inactive'}`;
+            document.getElementById('tabTeacher').className = `flex-1 py-2.5 rounded-full text-sm font-bold transition-all ${role === 'teacher' ? 'tab-active' : 'tab-inactive'}`;
+
+            toggleFieldsBasedOnRole();
+            showError('');
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+
+            const loginBtn = document.getElementById('modeLoginBtn');
+            const regBtn = document.getElementById('modeRegisterBtn');
+
+            if (mode === 'login') {
+                loginBtn.className = 'pb-3 text-sm font-bold border-b-2 border-losev-red text-losev-red transition-all';
+                regBtn.className = 'pb-3 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition-all';
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('registerForm').classList.add('hidden');
+            } else {
+                regBtn.className = 'pb-3 text-sm font-bold border-b-2 border-losev-red text-losev-red transition-all';
+                loginBtn.className = 'pb-3 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition-all';
+                document.getElementById('registerForm').classList.remove('hidden');
+                document.getElementById('loginForm').classList.add('hidden');
+            }
+            showError('');
+        }
+
+        function toggleFieldsBasedOnRole() {
+            const stFields = document.getElementById('studentFields');
+            const tFields = document.getElementById('teacherFields');
+            const schoolInput = document.getElementById('regSchoolName');
+            const teacherInput = document.getElementById('regTeacher');
+
+            if (currentRole === 'student') {
+                stFields.classList.remove('hidden');
+                tFields.classList.add('hidden');
+                schoolInput.setAttribute('required', 'true');
+                teacherInput.setAttribute('required', 'true');
+            } else {
+                stFields.classList.add('hidden');
+                tFields.classList.remove('hidden');
+                schoolInput.removeAttribute('required');
+                teacherInput.removeAttribute('required');
+            }
+        }
+
+        // Call REST APIs
+        async function apiRequest(endpoint, method = 'POST', body = null) {
+            const opts = { method, headers: {} };
+            if (body) {
+                opts.headers['Content-Type'] = 'application/json';
+                opts.body = JSON.stringify(body);
+            }
+            const res = await fetch(API_BASE + endpoint, opts);
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || 'Bilinmeyen bir hata oluştu');
+            return data;
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            showError('');
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const btn = document.getElementById('loginSubmitBtn');
+            btn.disabled = true;
+            btn.innerHTML = 'Giriş Yapılıyor...';
+
+            try {
+                const response = await apiRequest('/auth/login', 'POST', {
+                    role: currentRole,
+                    email,
+                    password
+                });
+
+                // Save user session in localStorage, simulate token
+                localStorage.setItem('auth_user', JSON.stringify({ ...response.user, role: response.role }));
+                window.location.href = 'dashboard.html';
+
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Giriş Yap';
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            showError('');
+
+            const payload = {
+                role: currentRole,
+                firstName: document.getElementById('regFirstName').value,
+                lastName: document.getElementById('regLastName').value,
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPassword').value,
+            };
+
+            if (currentRole === 'student') {
+                payload.schoolName = document.getElementById('regSchoolName').value;
+                payload.coordinatorTeacherName = document.getElementById('regTeacher').value;
+            } else {
+                payload.schoolName = document.getElementById('regTeacherSchoolName').value;
+            }
+
+            const btn = document.getElementById('registerSubmitBtn');
+            btn.disabled = true;
+            btn.innerHTML = 'Kayıt Olunuyor...';
+
+            try {
+                const response = await apiRequest('/auth/register', 'POST', payload);
+
+                // Auto-login upon registration
+                localStorage.setItem('auth_user', JSON.stringify({ ...response.user, role: response.role }));
+                window.location.href = 'dashboard.html';
+
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Aramıza Katıl';
+            }
+        }
+    </script>
+</body>
+
+</html>

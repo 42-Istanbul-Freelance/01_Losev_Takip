@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 
-const dbPath = path.resolve(__dirname, '../database.sqlite');
+const dbPath = process.env.DB_PATH || path.resolve(__dirname, '../database.sqlite');
 const db = new sqlite3.Database(dbPath);
 
 db.serialize(() => {
@@ -17,11 +17,14 @@ db.serialize(() => {
     grade TEXT,
     phone TEXT,
     email TEXT,
+    password TEXT,
     coordinatorTeacherName TEXT,
     targetHours INTEGER,
     createdAt TEXT,
     updatedAt TEXT
   )`);
+
+  db.run(`ALTER TABLE students ADD COLUMN password TEXT`, (err) => { });
 
   db.run(`CREATE TABLE IF NOT EXISTS activities (
     id TEXT PRIMARY KEY,
@@ -35,6 +38,17 @@ db.serialize(() => {
     createdAt TEXT,
     updatedAt TEXT,
     FOREIGN KEY(studentId) REFERENCES students(id)
+  )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS teachers (
+    id TEXT PRIMARY KEY,
+    firstName TEXT,
+    lastName TEXT,
+    email TEXT UNIQUE,
+    password TEXT,
+    schoolName TEXT,
+    createdAt TEXT,
+    updatedAt TEXT
   )`);
 });
 
@@ -70,17 +84,51 @@ async function createStudent(payload) {
   const now = new Date().toISOString();
   const targetHours = payload.targetHours || 40;
 
-  const sql = `INSERT INTO students (id, firstName, lastName, nationalId, schoolName, city, district, grade, phone, email, coordinatorTeacherName, targetHours, createdAt, updatedAt)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const sql = `INSERT INTO students (id, firstName, lastName, nationalId, schoolName, city, district, grade, phone, email, password, coordinatorTeacherName, targetHours, createdAt, updatedAt)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   await runAsync(sql, [
     id, payload.firstName, payload.lastName, payload.nationalId || null,
     payload.schoolName, payload.city, payload.district, payload.grade,
-    payload.phone, payload.email, payload.coordinatorTeacherName, targetHours,
+    payload.phone, payload.email, payload.password, payload.coordinatorTeacherName, targetHours,
     now, now
   ]);
 
-  return getStudentById(id);
+  const student = await getStudentById(id);
+  delete student.password;
+  return student;
+}
+
+async function loginStudent(email, password) {
+  const student = await getAsync(`SELECT * FROM students WHERE email = ? AND password = ?`, [email, password]);
+  if (student) {
+    delete student.password;
+  }
+  return student;
+}
+
+async function createTeacher(payload) {
+  const id = uuidv4();
+  const now = new Date().toISOString();
+
+  const sql = `INSERT INTO teachers (id, firstName, lastName, email, password, schoolName, createdAt, updatedAt)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+
+  await runAsync(sql, [
+    id, payload.firstName, payload.lastName, payload.email, payload.password, payload.schoolName, now, now
+  ]);
+
+  const teacher = await getAsync(`SELECT * FROM teachers WHERE id = ?`, [id]);
+  delete teacher.password;
+  return teacher;
+}
+
+async function loginTeacher(email, password) {
+  const teacher = await getAsync(`SELECT * FROM teachers WHERE email = ? AND password = ?`, [email, password]);
+  if (teacher) {
+    delete teacher.password;
+  }
+  return teacher;
 }
 
 async function listStudents() {
@@ -216,8 +264,11 @@ async function computeTopSchools(limit = 10) {
 
 module.exports = {
   createStudent,
+  loginStudent,
   listStudents,
   getStudentById,
+  createTeacher,
+  loginTeacher,
   logActivity,
   listActivitiesByStudent,
   listAllActivities,
