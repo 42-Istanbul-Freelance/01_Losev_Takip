@@ -32,9 +32,6 @@
                     fontFamily: {
                         sans: ['Outfit', 'sans-serif'],
                     },
-                    boxShadow: {
-                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
-                    },
                     animation: {
                         'blob': 'blob 7s infinite',
                         'fade-in': 'fadeIn 0.5s ease-out forwards',
@@ -56,7 +53,6 @@
         };
     </script>
     <style>
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -75,225 +71,359 @@
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
         }
 
-        /* UX Improvements */
-        /* Make inputs transparent/opaque until focused or filled */
         .form-input {
-            @apply w-full rounded-xl border border-slate-200 bg-black/5 px-4 py-3 text-sm text-slate-800 outline-none transition-all duration-300 placeholder:text-slate-400 opacity-90;
+            width: 100%;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: rgba(248, 250, 252, 0.5);
+            padding: 0.875rem 1rem;
+            font-size: 0.875rem;
+            color: #1e293b;
+            outline: none;
+            transition: all 0.3s;
         }
 
-        .form-input:focus,
-        .form-input:not(:placeholder-shown) {
-            @apply opacity-100 bg-white border-losev-red ring-2 ring-losev-red/20 shadow-sm transform scale-[1.01];
+        .form-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-input:focus {
+            background: #fff;
+            border-color: #d62828;
+            box-shadow: 0 0 0 4px rgba(214, 40, 40, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
         }
 
         .input-group label {
-            @apply flex items-center gap-1 block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider transition-colors;
-        }
-
-        .form-input:focus+label {
-            @apply text-losev-red;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 0.375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .required-star {
-            @apply text-losev-red text-sm font-black;
+            color: #d62828;
+            font-size: 0.875rem;
+            font-weight: 900;
         }
 
-        .btn-primary {
-            @apply inline-flex items-center justify-center gap-2 rounded-full w-full bg-gradient-to-r from-losev-red to-[#f94144] px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-losev-red/30 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-losev-red/40 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+        .btn-auth {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: auto;
+            min-width: 200px;
+            margin: 2rem auto 0 auto;
+            padding: 0.875rem 2.5rem;
+            border-radius: 9999px;
+            background: linear-gradient(to right, #d62828, #f94144);
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(214, 40, 40, 0.3);
+            transition: all 0.2s;
         }
 
-        .tab-active {
-            @apply bg-losev-red text-white shadow-md shadow-losev-red/30;
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(214, 40, 40, 0.4);
         }
 
-        .tab-inactive {
-            @apply bg-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-100;
+        .btn-auth:active {
+            transform: scale(0.95);
+        }
+
+        .btn-auth:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .mode-btn {
+            padding-bottom: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 900;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+            background: none;
+            cursor: pointer;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .mode-active {
+            border-bottom-color: #d62828;
+            color: #d62828;
+        }
+
+        .mode-inactive {
+            color: #94a3b8;
+        }
+
+        .mode-inactive:hover {
+            color: #475569;
         }
     </style>
 </head>
 
-<body
-    class="bg-slate-50 text-slate-800 antialiased relative min-h-screen flex flex-col justify-center items-center py-12 px-4">
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- Animations bg -->
-    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+    <main class="flex-1 flex flex-col lg:flex-row">
+        <!-- Left Side: Visual Branding -->
         <div
-            class="absolute top-0 -left-4 w-72 h-72 bg-losev-redSoft rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob">
-        </div>
-        <div
-            class="absolute -bottom-8 right-20 w-72 h-72 bg-losev-orangeSoft rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-2000">
-        </div>
-    </div>
+            class="hidden lg:flex lg:w-1/2 relative flex-col items-center justify-center p-12 overflow-hidden bg-slate-900">
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('donate-bg.jpg');"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-losev-red/80"></div>
 
-    <div class="w-full max-w-md animate-fade-in relative z-10">
+            <div
+                class="absolute top-20 left-20 w-32 h-32 bg-losev-orange rounded-full mix-blend-screen filter blur-[80px] opacity-40 animate-blob">
+            </div>
+            <div class="absolute bottom-20 right-20 w-48 h-48 bg-losev-blue rounded-full mix-blend-screen filter blur-[100px] opacity-40 animate-blob"
+                style="animation-delay: 4s;"></div>
 
-        <!-- Header/Logo area -->
-        <div class="text-center mb-8">
-            <div class="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-losev-red to-rose-600 shadow-lg transform transition hover:rotate-6 mb-4 cursor-pointer"
-                onclick="window.location.href='index.html'">
-                <svg viewBox="0 0 32 32" class="h-10 w-10 text-white" fill="none">
+            <div class="relative z-20 text-center text-white max-w-xl">
+                <div
+                    class="inline-flex h-24 w-24 items-center justify-center rounded-[2rem] bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl mb-8">
+                    <svg viewBox="0 0 32 32" class="h-14 w-14 text-white" fill="none">
+                        <path
+                            d="M16 27s-6.4-3.9-9.7-7.9C4.1 16.7 3.5 14.2 4 12.2 4.6 9.7 6.7 8 9 8c1.9 0 3.4 1 4.3 2.5C14.6 9 16.1 8 18 8c2.3 0 4.4 1.7 5 4.2.5 2-0.1 4.5-2.3 6.9C22.4 23.1 16 27 16 27z"
+                            fill="currentColor" />
+                        <path d="M12 16l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <h2 id="leftTitle" class="text-4xl md:text-5xl font-black mb-6 leading-tight">Bir İnci<br /><span
+                        class="text-losev-orangeSoft">Bin Umut!</span></h2>
+                <p id="leftDesc" class="text-lg text-slate-300 font-medium leading-relaxed">
+                    LÖSEV İnci Gönüllülük İstasyonu'na katılarak, çocuklara umut olan kocaman ailenin bir parçası
+                    olabilirsin.
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Side: Auth Form -->
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-20 relative bg-slate-50">
+
+            <!-- Mobile Background Blobs -->
+            <div class="lg:hidden absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                <div
+                    class="absolute top-0 -left-4 w-72 h-72 bg-losev-redSoft rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-blob">
+                </div>
+                <div class="absolute -bottom-8 right-20 w-72 h-72 bg-losev-orangeSoft rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-blob"
+                    style="animation-delay: 2s;"></div>
+            </div>
+
+            <div class="w-full max-w-lg relative z-10 animate-fade-in">
+
+                <!-- Header -->
+                <div class="text-center mb-8 lg:text-left">
+                    <!-- Mobile Logo -->
+                    <div class="lg:hidden inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-losev-red to-rose-600 shadow-lg mb-4 cursor-pointer"
+                        onclick="window.location.href='index.html'">
+                        <svg viewBox="0 0 32 32" class="h-8 w-8 text-white" fill="none">
+                            <path
+                                d="M16 27s-6.4-3.9-9.7-7.9C4.1 16.7 3.5 14.2 4 12.2 4.6 9.7 6.7 8 9 8c1.9 0 3.4 1 4.3 2.5C14.6 9 16.1 8 18 8c2.3 0 4.4 1.7 5 4.2.5 2-0.1 4.5-2.3 6.9C22.4 23.1 16 27 16 27z"
+                                fill="currentColor" />
+                        </svg>
+                    </div>
+                    <!-- Desktop back link -->
+                    <a href="index.html"
+                        class="hidden lg:inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-losev-red transition mb-6">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Ana Sayfaya Dön
+                    </a>
+                    <!-- Role icon badge -->
+                    <div class="flex items-center gap-3 mb-2 justify-center lg:justify-start">
+                        <div id="roleIcon"
+                            class="w-10 h-10 rounded-xl bg-losev-red text-white flex items-center justify-center"></div>
+                        <span id="roleBadge"
+                            class="text-xs font-black uppercase tracking-widest text-losev-red bg-losev-redSoft px-3 py-1 rounded-full"></span>
+                    </div>
+                    <h1 id="pageTitle" class="text-3xl md:text-4xl font-black tracking-tight text-slate-800 mt-3">Hoş
+                        Geldiniz</h1>
+                    <p class="text-slate-500 font-medium mt-2">LÖSEV İnci Gönüllülük İstasyonu</p>
+                </div>
+
+                <!-- Mode Switch (Login / Register) -->
+                <div class="flex gap-8 border-b-2 border-slate-200 mb-8">
+                    <button id="modeLoginBtn" onclick="switchMode('login')" class="mode-btn mode-active">Giriş
+                        Yap</button>
+                    <button id="modeRegisterBtn" onclick="switchMode('register')" class="mode-btn mode-inactive">Kayıt
+                        Ol</button>
+                </div>
+
+                <!-- FORMS -->
+                <div id="formContainer" class="relative">
+                    <div id="errorMessage"
+                        class="hidden rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-sm font-bold p-4 mb-6">
+                    </div>
+
+                    <!-- LOGIN FORM -->
+                    <form id="loginForm" class="space-y-5" onsubmit="handleLogin(event)">
+                        <div class="input-group">
+                            <label>E-posta <span class="required-star">*</span></label>
+                            <input id="loginEmail" type="email" required class="form-input"
+                                placeholder="mail@adresi.com" />
+                        </div>
+                        <div class="input-group">
+                            <label>Şifre <span class="required-star">*</span></label>
+                            <input id="loginPassword" type="password" required class="form-input"
+                                placeholder="••••••••" />
+                        </div>
+                        <button type="submit" id="loginSubmitBtn" class="btn-auth">Giriş Yap</button>
+                    </form>
+
+                    <!-- REGISTER FORM -->
+                    <form id="registerForm" class="space-y-5 hidden" onsubmit="handleRegister(event)">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="input-group">
+                                <label>Ad <span class="required-star">*</span></label>
+                                <input id="regFirstName" required class="form-input" placeholder="Deniz" />
+                            </div>
+                            <div class="input-group">
+                                <label>Soyad <span class="required-star">*</span></label>
+                                <input id="regLastName" required class="form-input" placeholder="Yılmaz" />
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>E-posta <span class="required-star">*</span></label>
+                            <input id="regEmail" type="email" required class="form-input"
+                                placeholder="ornek@mail.com" />
+                        </div>
+                        <div class="input-group">
+                            <label>Şifre <span class="required-star">*</span></label>
+                            <input id="regPassword" type="password" required class="form-input"
+                                placeholder="En az 6 karakter" />
+                        </div>
+                        <!-- Student fields -->
+                        <div id="studentFields" class="space-y-4">
+                            <div class="input-group">
+                                <label>Okul Adı <span class="required-star">*</span></label>
+                                <input id="regSchoolName" class="form-input" placeholder="Örn: X Anadolu Lisesi" />
+                            </div>
+                            <div class="input-group">
+                                <label>Koordinatör Öğretmen <span class="required-star">*</span></label>
+                                <input id="regTeacher" class="form-input" placeholder="Örn: Ayşe Düz" />
+                            </div>
+                        </div>
+                        <!-- Teacher fields -->
+                        <div id="teacherFields" class="space-y-4 hidden">
+                            <div class="input-group">
+                                <label>Okul Adı <span class="required-star">*</span></label>
+                                <input id="regTeacherSchoolName" class="form-input"
+                                    placeholder="Görev Yaptığınız Okul" />
+                            </div>
+                        </div>
+                        <button type="submit" id="registerSubmitBtn" class="btn-auth">Aramıza Katıl</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-slate-900 border-t border-slate-800 text-slate-400 py-6 px-6 lg:px-12 text-sm">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <svg viewBox="0 0 32 32" class="h-6 w-6 text-losev-red" fill="none">
                     <path
                         d="M16 27s-6.4-3.9-9.7-7.9C4.1 16.7 3.5 14.2 4 12.2 4.6 9.7 6.7 8 9 8c1.9 0 3.4 1 4.3 2.5C14.6 9 16.1 8 18 8c2.3 0 4.4 1.7 5 4.2.5 2-0.1 4.5-2.3 6.9C22.4 23.1 16 27 16 27z"
                         fill="currentColor" />
-                    <path d="M12 16l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round"
-                        stroke-linejoin="round" />
                 </svg>
+                <p class="font-medium text-slate-300">&copy; 2026 LÖSEV - Lösemili Çocuklar Sağlık ve Eğitim Vakfı</p>
             </div>
-            <h1 class="text-3xl font-black tracking-tight text-slate-800">Hoş Geldiniz</h1>
-            <p class="text-slate-500 font-medium mt-1">LÖSEV İnci Gönüllülük İstasyonu</p>
-        </div>
-
-        <!-- Main Card -->
-        <div class="glass-card rounded-[2rem] p-6 md:p-8 relative">
-
-            <!-- Role Tabs -->
-            <div class="flex p-1 bg-slate-100 rounded-full mb-8 relative">
-                <button id="tabStudent" onclick="switchRole('student')"
-                    class="flex-1 py-2.5 rounded-full text-sm font-bold transition-all tab-active">Öğrenci</button>
-                <button id="tabTeacher" onclick="switchRole('teacher')"
-                    class="flex-1 py-2.5 rounded-full text-sm font-bold transition-all tab-inactive">Öğretmen</button>
-            </div>
-
-            <!-- Mode Switch (Login / Register) -->
-            <div class="flex justify-center gap-6 border-b border-slate-200 mb-6">
-                <button id="modeLoginBtn" onclick="switchMode('login')"
-                    class="pb-3 text-sm font-bold border-b-2 border-losev-red text-losev-red transition-all">Giriş
-                    Yap</button>
-                <button id="modeRegisterBtn" onclick="switchMode('register')"
-                    class="pb-3 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition-all">Kayıt
-                    Ol</button>
-            </div>
-
-            <!-- FORMS -->
-            <div id="formContainer" class="relative">
-
-                <!-- Error Message Container -->
-                <div id="errorMessage"
-                    class="hidden rounded-xl bg-losev-redSoft/50 border border-losev-red/20 text-losev-redDark text-sm font-semibold p-3 mb-4 text-center">
-                </div>
-
-                <!-- LOGIN FORM -->
-                <form id="loginForm" class="space-y-4" onsubmit="handleLogin(event)">
-                    <div class="input-group">
-                        <label>E-posta <span class="required-star">*</span></label>
-                        <input id="loginEmail" type="email" required class="form-input"
-                            placeholder="Mail adresini gir" />
-                    </div>
-                    <div class="input-group">
-                        <label>Şifre <span class="required-star">*</span></label>
-                        <input id="loginPassword" type="password" required class="form-input"
-                            placeholder="Şifrenizi gir" />
-                    </div>
-                    <button type="submit" id="loginSubmitBtn" class="btn-primary mt-6">Giriş Yap</button>
-                </form>
-
-                <!-- REGISTER FORM -->
-                <form id="registerForm" class="space-y-4 hidden" onsubmit="handleRegister(event)">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="input-group">
-                            <label>Ad <span class="required-star">*</span></label>
-                            <input id="regFirstName" required class="form-input" placeholder="Örn. Deniz" />
-                        </div>
-                        <div class="input-group">
-                            <label>Soyad <span class="required-star">*</span></label>
-                            <input id="regLastName" required class="form-input" placeholder="Örn. Yılmaz" />
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label>E-posta <span class="required-star">*</span></label>
-                        <input id="regEmail" type="email" required class="form-input" placeholder="ornek@mail.com" />
-                    </div>
-
-                    <div class="input-group">
-                        <label>Şifre <span class="required-star">*</span></label>
-                        <input id="regPassword" type="password" required class="form-input"
-                            placeholder="Güçlü bir şifre seçin" />
-                    </div>
-
-                    <!-- Student specific fields -->
-                    <div id="studentFields" class="space-y-4">
-                        <div class="input-group">
-                            <label>Okul Adı <span class="required-star">*</span></label>
-                            <input id="regSchoolName" class="form-input" placeholder="Anadolu Lisesi" />
-                        </div>
-                        <div class="input-group">
-                            <label>Koordinatör Öğretmen <span class="required-star">*</span></label>
-                            <input id="regTeacher" class="form-input" placeholder="Öğretmen Adı" />
-                        </div>
-                    </div>
-
-                    <!-- Teacher specific fields (if any extra, for now just school) -->
-                    <div id="teacherFields" class="space-y-4 hidden">
-                        <div class="input-group">
-                            <label>Okul Adı <span class="required-star">*</span></label>
-                            <input id="regTeacherSchoolName" class="form-input" placeholder="Anadolu Lisesi" />
-                        </div>
-                    </div>
-
-                    <button type="submit" id="registerSubmitBtn" class="btn-primary mt-6">Aramıza Katıl</button>
-                </form>
-
+            <div class="flex items-center gap-6 text-xs font-bold uppercase tracking-widest text-slate-500">
+                <a href="#" class="hover:text-losev-orangeSoft transition-colors">Yardım</a>
+                <a href="#" class="hover:text-losev-orangeSoft transition-colors">Gizlilik & KVKK</a>
+                <a href="#" class="hover:text-losev-orangeSoft transition-colors">İletişim</a>
             </div>
         </div>
-
-    </div>
+    </footer>
 
     <script>
-        const API_BASE = 'http://localhost:4000/api';
-        let currentRole = 'student'; // 'student' or 'teacher'
-        let currentMode = 'login';   // 'login' or 'register'
+        const API_BASE = '/api';
+        let currentRole = 'student';
+        let currentMode = 'login';
 
-        // Initialization logic checking URL params if user clicked from Landing Page
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const tabParam = urlParams.get('tab');
-            if (tabParam === 'teacher') {
-                switchRole('teacher');
-            }
+            currentRole = tabParam === 'teacher' ? 'teacher' : 'student';
+            setupRoleUI();
+            toggleFieldsBasedOnRole();
         });
 
-        function showError(msg) {
-            const err = document.getElementById('errorMessage');
-            if (!msg) {
-                err.classList.add('hidden');
-                err.innerText = '';
-            } else {
-                err.classList.remove('hidden');
-                err.innerText = msg;
+        function setupRoleUI() {
+            const isTeacher = currentRole === 'teacher';
+
+            // Page title
+            document.getElementById('pageTitle').innerText = isTeacher ? 'Öğretmen Girişi' : 'Öğrenci Girişi';
+
+            // Role badge
+            document.getElementById('roleBadge').innerText = isTeacher ? 'Öğretmen' : 'Öğrenci';
+
+            // Role icon
+            document.getElementById('roleIcon').innerHTML = isTeacher
+                ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>'
+                : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>';
+
+            // Left panel text
+            const leftTitle = document.getElementById('leftTitle');
+            const leftDesc = document.getElementById('leftDesc');
+            if (leftTitle) {
+                leftTitle.innerHTML = isTeacher
+                    ? 'Koordinatör<br/><span class="text-losev-orangeSoft">Öğretmen Paneli</span>'
+                    : 'Bir İnci<br/><span class="text-losev-orangeSoft">Bin Umut!</span>';
+            }
+            if (leftDesc) {
+                leftDesc.innerText = isTeacher
+                    ? 'Öğrencilerinizin gönüllülük çalışmalarını takip edin, onaylayın ve raporlarını görüntüleyin.'
+                    : 'LÖSEV İnci Gönüllülük İstasyonuna katılarak, çocuklara umut olan kocaman ailenin bir parçası olabilirsin.';
             }
         }
 
-        function switchRole(role) {
-            currentRole = role;
-            document.getElementById('tabStudent').className = `flex-1 py-2.5 rounded-full text-sm font-bold transition-all ${role === 'student' ? 'tab-active' : 'tab-inactive'}`;
-            document.getElementById('tabTeacher').className = `flex-1 py-2.5 rounded-full text-sm font-bold transition-all ${role === 'teacher' ? 'tab-active' : 'tab-inactive'}`;
-
-            toggleFieldsBasedOnRole();
-            showError('');
+        function showError(msg) {
+            const err = document.getElementById('errorMessage');
+            if (!msg) { err.classList.add('hidden'); err.innerText = ''; }
+            else { err.classList.remove('hidden'); err.innerText = msg; }
         }
 
         function switchMode(mode) {
             currentMode = mode;
-
             const loginBtn = document.getElementById('modeLoginBtn');
             const regBtn = document.getElementById('modeRegisterBtn');
 
             if (mode === 'login') {
-                loginBtn.className = 'pb-3 text-sm font-bold border-b-2 border-losev-red text-losev-red transition-all';
-                regBtn.className = 'pb-3 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition-all';
+                loginBtn.className = 'mode-btn mode-active';
+                regBtn.className = 'mode-btn mode-inactive';
                 document.getElementById('loginForm').classList.remove('hidden');
                 document.getElementById('registerForm').classList.add('hidden');
             } else {
-                regBtn.className = 'pb-3 text-sm font-bold border-b-2 border-losev-red text-losev-red transition-all';
-                loginBtn.className = 'pb-3 text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition-all';
+                regBtn.className = 'mode-btn mode-active';
+                loginBtn.className = 'mode-btn mode-inactive';
                 document.getElementById('registerForm').classList.remove('hidden');
                 document.getElementById('loginForm').classList.add('hidden');
             }
@@ -319,13 +449,9 @@
             }
         }
 
-        // Call REST APIs
         async function apiRequest(endpoint, method = 'POST', body = null) {
             const opts = { method, headers: {} };
-            if (body) {
-                opts.headers['Content-Type'] = 'application/json';
-                opts.body = JSON.stringify(body);
-            }
+            if (body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
             const res = await fetch(API_BASE + endpoint, opts);
             const data = await res.json().catch(() => ({}));
             if (!res.ok) throw new Error(data.error || 'Bilinmeyen bir hata oluştu');
@@ -337,34 +463,23 @@
             showError('');
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-
             const btn = document.getElementById('loginSubmitBtn');
-            btn.disabled = true;
-            btn.innerHTML = 'Giriş Yapılıyor...';
+            btn.disabled = true; btn.innerHTML = 'Giriş Yapılıyor...';
 
             try {
-                const response = await apiRequest('/auth/login', 'POST', {
-                    role: currentRole,
-                    email,
-                    password
-                });
-
-                // Save user session in localStorage, simulate token
+                const response = await apiRequest('/auth/login', 'POST', { role: currentRole, email, password });
                 localStorage.setItem('auth_user', JSON.stringify({ ...response.user, role: response.role }));
                 window.location.href = 'dashboard.html';
-
             } catch (err) {
                 showError(err.message);
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = 'Giriş Yap';
+                btn.disabled = false; btn.innerHTML = 'Giriş Yap';
             }
         }
 
         async function handleRegister(e) {
             e.preventDefault();
             showError('');
-
             const payload = {
                 role: currentRole,
                 firstName: document.getElementById('regFirstName').value,
@@ -372,30 +487,23 @@
                 email: document.getElementById('regEmail').value,
                 password: document.getElementById('regPassword').value,
             };
-
             if (currentRole === 'student') {
                 payload.schoolName = document.getElementById('regSchoolName').value;
                 payload.coordinatorTeacherName = document.getElementById('regTeacher').value;
             } else {
                 payload.schoolName = document.getElementById('regTeacherSchoolName').value;
             }
-
             const btn = document.getElementById('registerSubmitBtn');
-            btn.disabled = true;
-            btn.innerHTML = 'Kayıt Olunuyor...';
+            btn.disabled = true; btn.innerHTML = 'Kayıt Olunuyor...';
 
             try {
                 const response = await apiRequest('/auth/register', 'POST', payload);
-
-                // Auto-login upon registration
                 localStorage.setItem('auth_user', JSON.stringify({ ...response.user, role: response.role }));
                 window.location.href = 'dashboard.html';
-
             } catch (err) {
                 showError(err.message);
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = 'Aramıza Katıl';
+                btn.disabled = false; btn.innerHTML = 'Aramıza Katıl';
             }
         }
     </script>

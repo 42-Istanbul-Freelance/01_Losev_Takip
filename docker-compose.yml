@@ -1,25 +1,15 @@
 services:
-  backend:
-    build: ./backend
-    container_name: losev-takip-backend
+  app:
+    build: .
+    container_name: losev-takip
     ports:
       - "4000:4000"
     environment:
       - PORT=4000
-      - CORS_ORIGIN=*
       - DB_PATH=/app/data/database.sqlite
     volumes:
-      - backend-data:/app/data
-    restart: always
-
-  frontend:
-    build: ./frontend
-    container_name: losev-takip-frontend
-    ports:
-      - "3000:80"
-    depends_on:
-      - backend
+      - app-data:/app/data
     restart: always
 
 volumes:
-  backend-data:
+  app-data:
