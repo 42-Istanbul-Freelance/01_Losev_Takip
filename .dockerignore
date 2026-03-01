@@ -1,0 +1,5 @@
+backend/node_modules
+backend/npm-debug.log
+backend/database.sqlite
+**/.DS_Store
+.git

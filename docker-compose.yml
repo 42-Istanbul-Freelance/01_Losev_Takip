@@ -4,9 +4,6 @@ services:
     container_name: losev-takip
     ports:
       - "4000:4000"
-    environment:
-      - PORT=4000
-      - DB_PATH=/app/data/database.sqlite
     volumes:
       - app-data:/app/data
     restart: always
