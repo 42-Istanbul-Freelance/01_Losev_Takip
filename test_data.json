@@ -1,0 +1,73 @@
+{
+  "admin": {
+    "email": "admin@test.com",
+    "password": "admin123",
+    "firstName": "Test",
+    "lastName": "Admin",
+    "schoolName": "Test Okulu"
+  },
+  "teachers": [
+    {
+      "email": "admin@test.com",
+      "password": "admin123",
+      "firstName": "Test",
+      "lastName": "Admin",
+      "schoolName": "Test Okulu"
+    },
+    {
+      "email": "koordinator@losev.org",
+      "password": "losev2024",
+      "firstName": "Ali",
+      "lastName": "Veli",
+      "schoolName": "LÖSEV Koordinasyon"
+    }
+  ],
+  "students": [
+    {
+      "firstName": "Ahmet",
+      "lastName": "Yılmaz",
+      "email": "ahmet@test.com",
+      "password": "123456",
+      "nationalId": "12345678901",
+      "schoolName": "İstanbul Lisesi",
+      "city": "İstanbul",
+      "district": "Kadıköy",
+      "grade": "11",
+      "phone": "05551234567",
+      "coordinatorTeacherName": "Test Admin",
+      "targetHours": 40
+    },
+    {
+      "firstName": "Ayşe",
+      "lastName": "Demir",
+      "email": "ayse@test.com",
+      "password": "123456",
+      "nationalId": "98765432109",
+      "schoolName": "Ankara Fen Lisesi",
+      "city": "Ankara",
+      "district": "Çankaya",
+      "grade": "10",
+      "phone": "05559876543",
+      "coordinatorTeacherName": "Test Admin",
+      "targetHours": 40
+    },
+    {
+      "firstName": "Mehmet",
+      "lastName": "Kaya",
+      "email": "mehmet@test.com",
+      "password": "123456",
+      "nationalId": "45678901234",
+      "schoolName": "İzmir Anadolu Lisesi",
+      "city": "İzmir",
+      "district": "Konak",
+      "grade": "12",
+      "phone": "05554567890",
+      "coordinatorTeacherName": "Ali Veli",
+      "targetHours": 40
+    }
+  ],
+  "login_urls": {
+    "student": "http://localhost:4000/login.html",
+    "teacher": "http://localhost:4000/login.html"
+  }
+}
