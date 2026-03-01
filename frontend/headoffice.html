@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <title>LÖSEV İnci - Genel Merkez Paneli</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        losev: {
+                            red: '#d62828',
+                            redSoft: '#fcd5ce',
+                            redDark: '#9e0000',
+                            green: '#2e7d32',
+                            greenSoft: '#e8f5e9',
+                            orange: '#f77f00',
+                            orangeSoft: '#ffecd1',
+                            blue: '#457b9d',
+                            blueSoft: '#e0fbfc'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.03);
+            border-radius: 1.5rem;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+        .nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        .nav-active {
+            background: #d62828;
+            color: white;
+            box-shadow: 0 4px 12px rgba(214, 40, 40, 0.3);
+        }
+        .nav-inactive {
+            color: #64748b;
+        }
+        .nav-inactive:hover {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+        .hidden-panel { display: none !important; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
+
+    <!-- Sidebar -->
+    <aside class="fixed top-0 left-0 h-full w-64 bg-white border-r border-slate-200 z-50 hidden md:flex flex-col">
+        <div class="p-6 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-losev-red text-white flex items-center justify-center font-black text-lg">L</div>
+                <div>
+                    <h1 class="font-black text-slate-800 text-sm leading-tight">LÖSEV İNCİ</h1>
+                    <p class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-wider">Genel Merkez</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-b border-slate-100">
+            <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50">
+                <div class="w-10 h-10 rounded-full bg-losev-red/10 text-losev-red flex items-center justify-center font-bold" id="userInitials">GM</div>
+                <div class="overflow-hidden">
+                    <p class="font-bold text-sm text-slate-800 truncate" id="userName">Genel Merkez</p>
+                    <p class="text-xs text-slate-500">Yönetici</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-2" id="sidebarNav">
+            <button onclick="switchSection('dashboard')" id="nav_dashboard" class="nav-item nav-active">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                Genel Bakış
+            </button>
+            <button onclick="switchSection('activities')" id="nav_activities" class="nav-item nav-inactive">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                Faaliyetler
+            </button>
+            <button onclick="switchSection('students')" id="nav_students" class="nav-item nav-inactive">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm6 0h-3.5a6 6 0 00-3.5-1v-1a6 6 0 013.5-1H21v2z"></path></svg>
+                Öğrenciler
+            </button>
+            <button onclick="switchSection('reports')" id="nav_reports" class="nav-item nav-inactive">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                Raporlar
+            </button>
+            <button onclick="switchSection('cities')" id="nav_cities" class="nav-item nav-inactive">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path></svg>
+                İl Bazlı Analiz
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-slate-100">
+            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-losev-red transition font-semibold text-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Çıkış Yap
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="md:ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
+            <div class="flex items-center justify-between px-6 py-4">
+                <h2 id="pageTitle" class="text-xl font-bold text-slate-800">Genel Bakış</h2>
+                <div class="flex items-center gap-4">
+                    <span class="px-3 py-1 rounded-full bg-losev-red/10 text-losev-red text-xs font-bold" id="liveIndicator">● CANLI</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-6">
+            <!-- DASHBOARD SECTION -->
+            <section id="viewDashboard" class="space-y-6">
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="stat-card">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Toplam Öğrenci</p>
+                        <p class="text-3xl font-black text-slate-800 mt-2" id="statStudents">-</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Toplam Öğretmen</p>
+                        <p class="text-3xl font-black text-slate-800 mt-2" id="statTeachers">-</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Gönüllülük Saati</p>
+                        <p class="text-3xl font-black text-losev-blue mt-2" id="statHours">-</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Bekleyen Onay</p>
+                        <p class="text-3xl font-black text-losev-orange mt-2" id="statPending">-</p>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="glass-card p-6">
+                        <h3 class="font-bold text-slate-800 mb-4">Aylık Faaliyet Dağılımı</h3>
+                        <canvas id="monthlyChart" height="200"></canvas>
+                    </div>
+                    <div class="glass-card p-6">
+                        <h3 class="font-bold text-slate-800 mb-4">Etkinlik Türü Dağılımı</h3>
+                        <canvas id="activityTypeChart" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top Lists -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="glass-card p-6">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="text-amber-500">⭐</span> En Aktif Öğrenciler
+                        </h3>
+                        <div id="topStudentsList" class="space-y-3">
+                            <p class="text-sm text-slate-400 text-center py-4">Yükleniyor...</p>
+                        </div>
+                    </div>
+                    <div class="glass-card p-6">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="text-losev-blue">🏫</span> En Aktif Okullar
+                        </h3>
+                        <div id="topSchoolsList" class="space-y-3">
+                            <p class="text-sm text-slate-400 text-center py-4">Yükleniyor...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ACTIVITIES SECTION -->
+            <section id="viewActivities" class="hidden-panel space-y-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex gap-2">
+                        <button onclick="filterActivities('all')" class="px-4 py-2 rounded-lg text-sm font-semibold bg-losev-red text-white" id="filterAll">Tümü</button>
+                        <button onclick="filterActivities('pending')" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-slate-600 border border-slate-200" id="filterPending">Bekleyen</button>
+                        <button onclick="filterActivities('approved')" class="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-slate-600 border border-slate-200" id="filterApproved">Onaylanan</button>
+                    </div>
+                </div>
+
+                <div class="glass-card overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50">
+                            <tr class="text-xs font-bold text-slate-500 uppercase">
+                                <th class="py-3 px-4">Öğrenci</th>
+                                <th class="py-3 px-4">Okul</th>
+                                <th class="py-3 px-4">Etkinlik</th>
+                                <th class="py-3 px-4 text-center">Saat</th>
+                                <th class="py-3 px-4 text-center">Durum</th>
+                                <th class="py-3 px-4 text-right">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activitiesTableBody" class="divide-y divide-slate-100">
+                            <tr><td colspan="6" class="py-12 text-center text-slate-400">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- STUDENTS SECTION -->
+            <section id="viewStudents" class="hidden-panel space-y-6">
+                <div class="glass-card p-4">
+                    <input type="text" id="studentSearch" placeholder="Öğrenci ara..." class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-losev-red focus:ring-2 focus:ring-losev-red/20 outline-none" onkeyup="searchStudents()">
+                </div>
+
+                <div class="glass-card overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50">
+                            <tr class="text-xs font-bold text-slate-500 uppercase">
+                                <th class="py-3 px-4">Ad Soyad</th>
+                                <th class="py-3 px-4">Okul</th>
+                                <th class="py-3 px-4">İl/İlçe</th>
+                                <th class="py-3 px-4">Sınıf</th>
+                                <th class="py-3 px-4">Koordinatör</th>
+                                <th class="py-3 px-4 text-center">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody" class="divide-y divide-slate-100">
+                            <tr><td colspan="6" class="py-12 text-center text-slate-400">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- REPORTS SECTION -->
+            <section id="viewReports" class="hidden-panel space-y-6">
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="stat-card">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Toplam Okul</p>
+                        <p class="text-2xl font-black text-slate-800 mt-2" id="statTotalSchools">-</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Toplam İl</p>
+                        <p class="text-2xl font-black text-slate-800 mt-2" id="statTotalCities">-</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Onaylanan Faaliyet</p>
+                        <p class="text-2xl font-black text-losev-green mt-2" id="statApprovedActivities">-</p>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6">
+                    <h3 class="font-bold text-slate-800 mb-4">Okul Performans Tablosu</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50">
+                                <tr class="text-xs font-bold text-slate-500 uppercase">
+                                    <th class="py-3 px-4">#</th>
+                                    <th class="py-3 px-4">Okul</th>
+                                    <th class="py-3 px-4 text-center">Öğrenci Sayısı</th>
+                                    <th class="py-3 px-4 text-center">Toplam Saat</th>
+                                    <th class="py-3 px-4 text-center">Ort. Saat/Öğrenci</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schoolsReportTable" class="divide-y divide-slate-100">
+                                <tr><td colspan="5" class="py-12 text-center text-slate-400">Yükleniyor...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CITIES SECTION -->
+            <section id="viewCities" class="hidden-panel space-y-6">
+                <div class="glass-card p-6">
+                    <h3 class="font-bold text-slate-800 mb-4">İl Bazlı Etki Analizi</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50">
+                                <tr class="text-xs font-bold text-slate-500 uppercase">
+                                    <th class="py-3 px-4">#</th>
+                                    <th class="py-3 px-4">İl</th>
+                                    <th class="py-3 px-4 text-center">Öğrenci Sayısı</th>
+                                    <th class="py-3 px-4 text-center">Faaliyet Sayısı</th>
+                                    <th class="py-3 px-4 text-center">Toplam Saat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="citiesTable" class="divide-y divide-slate-100">
+                                <tr><td colspan="5" class="py-12 text-center text-slate-400">Yükleniyor...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="glass-card p-6">
+                        <h3 class="font-bold text-slate-800 mb-4">İl Dağılımı (Pasta Grafiği)</h3>
+                        <canvas id="cityChart" height="250"></canvas>
+                    </div>
+                    <div class="glass-card p-6">
+                        <h3 class="font-bold text-slate-800 mb-4">Saat Bazlı İl Sıralaması</h3>
+                        <canvas id="cityHoursChart" height="250"></canvas>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = '/api';
+        let currentActivityFilter = 'all';
+        let allActivities = [];
+        let allStudents = [];
+
+        // Auth check
+        const authUser = localStorage.getItem('auth_user');
+        if (!authUser) window.location.href = 'login.html';
+        const user = JSON.parse(authUser);
+        if (user.role !== 'headoffice') window.location.href = 'dashboard.html';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
+            document.getElementById('userInitials').textContent = `${user.firstName[0]}${user.lastName[0]}`;
+
+            loadDashboard();
+            loadActivities();
+            loadStudents();
+            loadReports();
+            loadCityStats();
+        });
+
+        function switchSection(section) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden-panel'));
+            document.getElementById(`view${section.charAt(0).toUpperCase() + section.slice(1)}`).classList.remove('hidden-panel');
+
+            document.querySelectorAll('.nav-item').forEach(n => {
+                n.classList.remove('nav-active');
+                n.classList.add('nav-inactive');
+            });
+            document.getElementById(`nav_${section}`).classList.remove('nav-inactive');
+            document.getElementById(`nav_${section}`).classList.add('nav-active');
+
+            const titles = {
+                dashboard: 'Genel Bakış',
+                activities: 'Faaliyetler',
+                students: 'Öğrenciler',
+                reports: 'Raporlar',
+                cities: 'İl Bazlı Analiz'
+            };
+            document.getElementById('pageTitle').textContent = titles[section];
+        }
+
+        function logout() {
+            localStorage.removeItem('auth_user');
+            window.location.href = 'login.html';
+        }
+
+        async function apiRequest(endpoint, method = 'GET', body = null) {
+            const opts = { method, headers: {} };
+            if (body) {
+                opts.headers['Content-Type'] = 'application/json';
+                opts.body = JSON.stringify(body);
+            }
+            const res = await fetch(API_BASE + endpoint, opts);
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || 'Bir hata oluştu');
+            return data;
+        }
+
+        // Dashboard
+        async function loadDashboard() {
+            try {
+                const stats = await apiRequest('/reports/overview');
+                document.getElementById('statStudents').textContent = stats.totalStudents;
+                document.getElementById('statTeachers').textContent = stats.totalTeachers;
+                document.getElementById('statHours').textContent = stats.totalVolunteerHours;
+                document.getElementById('statPending').textContent = stats.pendingActivities;
+
+                // Load top lists
+                const [students, schools] = await Promise.all([
+                    apiRequest('/reports/top-students?limit=5'),
+                    apiRequest('/reports/top-schools?limit=5')
+                ]);
+
+                renderTopList('topStudentsList', students, 'saat');
+                renderTopList('topSchoolsList', schools, 'saat');
+
+                // Load charts
+                loadCharts();
+            } catch (e) {
+                console.error('Dashboard error:', e);
+            }
+        }
+
+        function renderTopList(elementId, items, suffix) {
+            const container = document.getElementById(elementId);
+            if (items.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-400 text-center">Henüz veri yok</p>';
+                return;
+            }
+
+            container.innerHTML = items.map((item, i) => `
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-white transition border border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg ${i < 3 ? 'bg-amber-400 text-white' : 'bg-slate-200 text-slate-600'} flex items-center justify-center font-bold text-sm">${i + 1}</div>
+                        <div>
+                            <p class="font-bold text-sm text-slate-800">${item.name || item.schoolName}</p>
+                            <p class="text-xs text-slate-500">${item.schoolName || `${item.studentCount} öğrenci`}</p>
+                        </div>
+                    </div>
+                    <span class="font-black text-losev-blue">${item.totalHours} ${suffix}</span>
+                </div>
+            `).join('');
+        }
+
+        async function loadCharts() {
+            try {
+                const [monthly, activityTypes] = await Promise.all([
+                    apiRequest('/reports/monthly'),
+                    apiRequest('/reports/by-activity-type')
+                ]);
+
+                // Monthly chart
+                new Chart(document.getElementById('monthlyChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: monthly.map(m => `${m.month}. Ay`),
+                        datasets: [{
+                            label: 'Faaliyet Sayısı',
+                            data: monthly.map(m => m.activityCount),
+                            backgroundColor: '#d62828'
+                        }, {
+                            label: 'Toplam Saat',
+                            data: monthly.map(m => m.totalHours),
+                            backgroundColor: '#457b9d'
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+
+                // Activity type chart
+                new Chart(document.getElementById('activityTypeChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: activityTypes.map(t => t.type),
+                        datasets: [{
+                            data: activityTypes.map(t => t.count),
+                            backgroundColor: ['#d62828', '#2e7d32', '#f77f00', '#457b9d', '#9e0000', '#fcd5ce', '#e8f5e9']
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            } catch (e) {
+                console.error('Chart error:', e);
+            }
+        }
+
+        // Activities
+        async function loadActivities() {
+            try {
+                allActivities = await apiRequest('/headoffice/activities');
+                renderActivities();
+            } catch (e) {
+                console.error('Activities error:', e);
+            }
+        }
+
+        function filterActivities(filter) {
+            currentActivityFilter = filter;
+
+            // Update button styles
+            ['all', 'pending', 'approved'].forEach(f => {
+                const btn = document.getElementById(`filter${f.charAt(0).toUpperCase() + f.slice(1)}`);
+                if (f === filter) {
+                    btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+                    btn.classList.add('bg-losev-red', 'text-white');
+                } else {
+                    btn.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
+                    btn.classList.remove('bg-losev-red', 'text-white');
+                }
+            });
+
+            renderActivities();
+        }
+
+        function renderActivities() {
+            const tbody = document.getElementById('activitiesTableBody');
+            let filtered = allActivities;
+
+            if (currentActivityFilter !== 'all') {
+                filtered = allActivities.filter(a => a.status === currentActivityFilter);
+            }
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="py-12 text-center text-slate-400">Kayıt bulunamadı</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(a => {
+                const statusColors = {
+                    pending: 'bg-yellow-100 text-yellow-700',
+                    approved: 'bg-green-100 text-green-700',
+                    rejected: 'bg-red-100 text-red-700'
+                };
+                const statusLabels = { pending: 'Bekliyor', approved: 'Onaylandı', rejected: 'Reddedildi' };
+
+                return `
+                    <tr class="hover:bg-slate-50">
+                        <td class="py-3 px-4 font-medium">${a.studentName}</td>
+                        <td class="py-3 px-4 text-sm text-slate-500">${a.schoolName}</td>
+                        <td class="py-3 px-4">
+                            <span class="text-xs font-bold text-slate-600 bg-slate-100 px-2 py-1 rounded">${a.type}</span>
+                            <p class="text-xs text-slate-400 mt-1">${a.description?.substring(0, 30)}...</p>
+                        </td>
+                        <td class="py-3 px-4 text-center font-bold">${a.hours}</td>
+                        <td class="py-3 px-4 text-center">
+                            <span class="px-2 py-1 rounded-full text-xs font-bold ${statusColors[a.status]}">${statusLabels[a.status]}</span>
+                        </td>
+                        <td class="py-3 px-4 text-right">
+                            ${a.status === 'pending' ? `
+                                <button onclick="updateActivityStatus('${a.id}', 'approved')" class="text-green-600 hover:text-green-800 mr-2">✓</button>
+                                <button onclick="updateActivityStatus('${a.id}', 'rejected')" class="text-red-600 hover:text-red-800">✗</button>
+                            ` : '-'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function updateActivityStatus(id, status) {
+            if (!confirm(`Bu faaliyeti ${status === 'approved' ? 'onaylamak' : 'reddetmek'} istediğinize emin misiniz?`)) return;
+            try {
+                await apiRequest(`/headoffice/activities/${id}/status`, 'PATCH', { status });
+                loadActivities();
+                loadDashboard();
+            } catch (e) {
+                alert(e.message);
+            }
+        }
+
+        // Students
+        async function loadStudents() {
+            try {
+                allStudents = await apiRequest('/headoffice/students');
+                renderStudents(allStudents);
+            } catch (e) {
+                console.error('Students error:', e);
+            }
+        }
+
+        function renderStudents(students) {
+            const tbody = document.getElementById('studentsTableBody');
+
+            if (students.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="py-12 text-center text-slate-400">Öğrenci bulunamadı</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = students.map(s => `
+                <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-medium">${s.firstName} ${s.lastName}</td>
+                    <td class="py-3 px-4 text-sm">${s.schoolName || '-'}</td>
+                    <td class="py-3 px-4 text-sm text-slate-500">${s.city || '-'}/${s.district || '-'}</td>
+                    <td class="py-3 px-4 text-sm">${s.grade || '-'}</td>
+                    <td class="py-3 px-4 text-sm">${s.coordinatorTeacherName || '-'}</td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="viewStudentReport('${s.id}')" class="text-losev-blue hover:underline text-sm">Rapor</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function searchStudents() {
+            const query = document.getElementById('studentSearch').value.toLowerCase();
+            const filtered = allStudents.filter(s =>
+                `${s.firstName} ${s.lastName}`.toLowerCase().includes(query) ||
+                s.schoolName?.toLowerCase().includes(query) ||
+                s.city?.toLowerCase().includes(query)
+            );
+            renderStudents(filtered);
+        }
+
+        function viewStudentReport(studentId) {
+            window.open(`profile.html?id=${studentId}&report=true`, '_blank');
+        }
+
+        // Reports
+        async function loadReports() {
+            try {
+                const [stats, schools] = await Promise.all([
+                    apiRequest('/reports/overview'),
+                    apiRequest('/reports/schools')
+                ]);
+
+                document.getElementById('statTotalSchools').textContent = stats.totalSchools;
+                document.getElementById('statTotalCities').textContent = stats.totalCities;
+                document.getElementById('statApprovedActivities').textContent = stats.approvedActivities;
+
+                // Schools report table
+                const tbody = document.getElementById('schoolsReportTable');
+                tbody.innerHTML = schools.map((s, i) => `
+                    <tr class="hover:bg-slate-50">
+                        <td class="py-3 px-4 font-bold">${i + 1}</td>
+                        <td class="py-3 px-4 font-medium">${s.schoolName}</td>
+                        <td class="py-3 px-4 text-center">${s.studentCount}</td>
+                        <td class="py-3 px-4 text-center font-bold text-losev-blue">${s.totalHours}</td>
+                        <td class="py-3 px-4 text-center">${s.studentCount > 0 ? (s.totalHours / s.studentCount).toFixed(1) : 0}</td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error('Reports error:', e);
+            }
+        }
+
+        // Cities
+        async function loadCityStats() {
+            try {
+                const cities = await apiRequest('/reports/by-city');
+
+                const tbody = document.getElementById('citiesTable');
+                tbody.innerHTML = cities.map((c, i) => `
+                    <tr class="hover:bg-slate-50">
+                        <td class="py-3 px-4 font-bold">${i + 1}</td>
+                        <td class="py-3 px-4 font-medium">${c.city}</td>
+                        <td class="py-3 px-4 text-center">${c.studentCount}</td>
+                        <td class="py-3 px-4 text-center">${c.activityCount}</td>
+                        <td class="py-3 px-4 text-center font-bold text-losev-blue">${c.totalHours}</td>
+                    </tr>
+                `).join('');
+
+                // City charts
+                new Chart(document.getElementById('cityChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: cities.slice(0, 8).map(c => c.city),
+                        datasets: [{
+                            data: cities.slice(0, 8).map(c => c.studentCount),
+                            backgroundColor: ['#d62828', '#2e7d32', '#f77f00', '#457b9d', '#9e0000', '#8b5cf6', '#ec4899', '#10b981']
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+
+                new Chart(document.getElementById('cityHoursChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: cities.slice(0, 8).map(c => c.city),
+                        datasets: [{
+                            label: 'Toplam Saat',
+                            data: cities.slice(0, 8).map(c => c.totalHours),
+                            backgroundColor: '#457b9d'
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            } catch (e) {
+                console.error('Cities error:', e);
+            }
+        }
+    </script>
+</body>
+</html>

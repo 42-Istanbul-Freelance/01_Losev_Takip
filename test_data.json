@@ -6,6 +6,13 @@
     "lastName": "Admin",
     "schoolName": "Test Okulu"
   },
+  "headoffice": {
+    "email": "gm@losev.org",
+    "password": "losev2024",
+    "firstName": "Genel",
+    "lastName": "Merkez",
+    "role": "admin"
+  },
   "teachers": [
     {
       "email": "admin@test.com",
@@ -68,6 +75,13 @@
   ],
   "login_urls": {
     "student": "http://localhost:4000/login.html",
-    "teacher": "http://localhost:4000/login.html"
+    "teacher": "http://localhost:4000/login.html",
+    "headoffice": "http://localhost:4000/login.html"
+  },
+  "panel_urls": {
+    "student_dashboard": "http://localhost:4000/dashboard.html",
+    "teacher_dashboard": "http://localhost:4000/dashboard.html",
+    "headoffice_panel": "http://localhost:4000/headoffice.html",
+    "profile": "http://localhost:4000/profile.html"
   }
 }
