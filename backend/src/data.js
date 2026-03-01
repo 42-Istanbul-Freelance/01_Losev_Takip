@@ -522,4 +522,41 @@ module.exports = {
   getMonthlyStats,
   getOverallStatistics,
   generateStudentReport,
+  seedTestData,
 };
+
+// Test verilerini veritabanına ekle
+async function seedTestData() {
+  const testData = require('../../test_data.json');
+  
+  try {
+    // Öğretmenleri ekle
+    for (const teacher of testData.teachers) {
+      try {
+        await createTeacher(teacher);
+      } catch (e) {
+        // Duplicate hatasını görmezden gel
+      }
+    }
+    
+    // Öğrencileri ekle
+    for (const student of testData.students) {
+      try {
+        await createStudent(student);
+      } catch (e) {
+        // Duplicate hatasını görmezden gel
+      }
+    }
+    
+    // Genel Merkez admin ekle
+    try {
+      await createHeadOfficeAdmin(testData.headoffice);
+    } catch (e) {
+      // Duplicate hatasını görmezden gel
+    }
+    
+    console.log('✅ Test verileri yüklendi');
+  } catch (error) {
+    console.error('Test verileri yüklenirken hata:', error);
+  }
+}

@@ -345,22 +345,102 @@
 
                     <!-- TEACHER SPECIFIC DASHBOARD CONTENT -->
                     <div id="teacherDashboardContent" class="hidden-panel space-y-6">
-                        <!-- Stats Row -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div
-                                class="glass-card p-6 flex items-center gap-4 bg-white/50 border-l-4 border-l-losev-orange">
-                                <div
-                                    class="w-14 h-14 rounded-full bg-losev-orangeSoft text-losev-orange flex items-center justify-center">
-                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
+                        <!-- School Performance Badge Card -->
+                        <div class="glass-card p-6 bg-gradient-to-br from-losev-red/5 to-losev-red/10 border border-losev-red/20">
+                            <div class="flex items-center gap-4">
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-losev-red to-rose-600 flex items-center justify-center text-white shadow-lg">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                                 </div>
-                                <div>
-                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Bekleyen
-                                        Onay</p>
-                                    <h3 class="text-3xl font-black text-slate-800 leading-none" id="tcPendingCount">-
-                                    </h3>
+                                <div class="flex-1">
+                                    <p class="font-black text-lg text-slate-800">🏆 Okulunuzun Rozeti</p>
+                                    <p class="text-sm text-losev-red font-semibold" id="teacherSchoolBadge">İnci Dostu Okul</p>
+                                    <p class="text-xs text-slate-500">Son güncelleme: Bugün</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-2xl font-black text-losev-red" id="teacherSchoolRank">#3</p>
+                                    <p class="text-xs text-slate-500">Türkiye sıralaması</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stats Row - Teacher View -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="glass-card p-4 bg-gradient-to-br from-white to-slate-50">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-losev-orangeSoft text-losev-orange flex items-center justify-center">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-400 uppercase">Bekleyen</p>
+                                        <p class="text-xl font-black text-slate-800" id="tcPendingCount">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="glass-card p-4 bg-gradient-to-br from-white to-slate-50">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-losev-greenSoft text-losev-green flex items-center justify-center">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-400 uppercase">Onaylanan</p>
+                                        <p class="text-xl font-black text-slate-800" id="tcApprovedCount">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="glass-card p-4 bg-gradient-to-br from-white to-slate-50">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-losev-blueSoft text-losev-blue flex items-center justify-center">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-400 uppercase">Öğrencilerim</p>
+                                        <p class="text-xl font-black text-slate-800" id="tcStudentCount">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="glass-card p-4 bg-gradient-to-br from-white to-slate-50">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-400 uppercase">Toplam Saat</p>
+                                        <p class="text-xl font-black text-losev-blue" id="tcTotalHours">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Student Badges Summary for Teacher -->
+                        <div class="glass-card p-6">
+                            <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                Öğrencilerimin Rozet Durumu
+                            </h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="text-center p-4 bg-amber-50 rounded-xl border border-amber-200">
+                                    <div class="text-3xl mb-2">🥉</div>
+                                    <p class="font-bold text-amber-700">Bronz İnci</p>
+                                    <p class="text-2xl font-black text-amber-600" id="teacherBronzeCount">-</p>
+                                    <p class="text-xs text-amber-500">25+ saat</p>
+                                </div>
+                                <div class="text-center p-4 bg-slate-100 rounded-xl border border-slate-300">
+                                    <div class="text-3xl mb-2">🥈</div>
+                                    <p class="font-bold text-slate-700">Gümüş İnci</p>
+                                    <p class="text-2xl font-black text-slate-600" id="teacherSilverCount">-</p>
+                                    <p class="text-xs text-slate-500">50+ saat</p>
+                                </div>
+                                <div class="text-center p-4 bg-yellow-50 rounded-xl border border-yellow-300">
+                                    <div class="text-3xl mb-2">🥇</div>
+                                    <p class="font-bold text-yellow-700">Altın İnci</p>
+                                    <p class="text-2xl font-black text-yellow-600" id="teacherGoldCount">-</p>
+                                    <p class="text-xs text-yellow-500">100+ saat</p>
+                                </div>
+                                <div class="text-center p-4 bg-purple-50 rounded-xl border border-purple-300">
+                                    <div class="text-3xl mb-2">👑</div>
+                                    <p class="font-bold text-purple-700">Platin İnci</p>
+                                    <p class="text-2xl font-black text-purple-600" id="teacherPlatinumCount">-</p>
+                                    <p class="text-xs text-purple-500">200+ saat</p>
                                 </div>
                             </div>
                         </div>
